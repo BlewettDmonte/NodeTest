@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/stylesheets/style.css" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Nimap test</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarNavAltMarkup"
+					aria-controls="navbarNavAltMarkup"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+					<div class="navbar-nav">
+						<a class="nav-link active" aria-current="page" href="/">Home</a>
+						<a class="nav-link" href="/category">Category</a>
+						<a class="nav-link" href="/">Product</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<h1 class="text-center"><%= title %></h1>
+		<p class="text-center">Welcome to <%= title %></p>
+		<div class="card text-center" style="overflow: hidden">
+			<div class="card-header row justify-content-start">
+				<button
+					class="btn btn-primary col-2"
+					data-bs-toggle="modal"
+					data-bs-target="#exampleModal"
+				>
+					Add Product
+				</button>
+				<h5 class="card-title col-3">Add New Product</h5>
+			</div>
+			<div class="card-body">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Product Id</th>
+							<th scope="col">Product Name</th>
+							<th scope="col">Category Id</th>
+							<th scope="col">Category Name</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="tableData">
+						<% if(data.length > 0 ) { %> <% data.forEach(data=>{ %>
+
+						<tr>
+							<th><%=data.productId%></th>
+							<td><%= data.productName %></td>
+							<th scope="row"><%= data.category.categoryId%></th>
+							<td><%= data.category.categoryName %></td>
+							<td>
+								<button
+									class="btn btn-primary m-2"
+									onclick="editCategory('<%=data.productId%>','<%= data.productName %>','<%= data.category.categoryId %>','<%= data.category.productName %>')"
+								>
+									edit</button
+								><button
+									class="btn btn-primary"
+									onclick="deleteCategory('<%=data.productId%>')"
+								>
+									Del
+								</button>
+							</td>
+						</tr>
+						<%})%> <%}else { %>
+
+						<tr>
+							<td>No data found</td>
+							<td>No data found</td>
+							<td>No data found</td>
+							<td>No data found</td>
+						</tr>
+						<%}%>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer">
+				<div class="">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination">
+							<li class="page-item hideli">
+								<a
+									class="page-link"
+									id="Previous"
+									onclick="paginationPrevious()"
+									>Previous</a
+								>
+							</li>
+							<li class="page-item">
+								<a class="page-link changePage" id="page-item">1</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" onclick="paginationNext()">Next</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Add-->
+		<div
+			class="modal fade"
+			id="exampleModal"
+			tabindex="-1"
+			aria-labelledby="exampleModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modelTitle">Add Product</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div id="error"></div>
+
+					<form id="AddProduct">
+						<div class="modal-body">
+							<input
+								type="text"
+								id="productName"
+								name="productName"
+								placeholder="Enter Product Name"
+								class="form-control m-2"
+							/>
+							<select name="categoryId" class="form-control m-2">
+								<% category.forEach(data=>{ %>
+								<option value="<%= data.categoryId%>">
+									<%=data.categoryName%>
+								</option>
+								<% })%>
+							</select>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button type="submit" id="modelBtn" class="btn btn-primary">
+								Add
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Model Edit -->
+		<div
+			class="modal fade"
+			id="editModal1"
+			tabindex="-1"
+			aria-labelledby="exampleModalLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modelTitleEdit">Edit Product</h5>
+						<button
+							type="button"
+							class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close"
+						></button>
+					</div>
+					<div id="editError"></div>
+
+					<form id="EditProduct">
+						<div class="modal-body">
+							<input
+								type="hidden"
+								id="productIdEdit"
+								name="productId"
+								class="form-control m-2"
+								
+							/>
+							<input
+								type="text"
+								id="productNameEdit"
+								name="productName"
+								placeholder="Enter Product Name"
+								class="form-control m-2"
+							/>
+							<select
+								name="categoryId"
+								id="selectProduct"
+								class="form-control m-2"
+							>
+								<% category.forEach(data=>{ %>
+								<option value="<%= data.categoryId%>">
+									<%=data.categoryName%>
+								</option>
+								<% })%>
+							</select>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button type="submit" class="btn btn-primary">Update</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.min.js"
+		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+		integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+		crossorigin="anonymous"
+	></script>
+	<script src="/custom/product.js"></script>
+</html>

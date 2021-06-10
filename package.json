@@ -1,0 +1,29 @@
+{
+  "name": "nodetest",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "null"
+  },
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "keywords": [
+    "null"
+  ],
+  "author": "Blewett",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "lodash": "^4.17.21",
+    "mysql": "^2.18.1",
+    "q": "^1.5.1",
+    "underscore": "^1.12.1"
+  },
+  "devDependencies": {},
+  "description": ""
+}
